@@ -67,6 +67,32 @@ function afficherProjets(projets) {
 
 
 
+// Affichage des Li projets contact login
+export function liPCL () {
+const li = document.querySelector(".pcl");
+
+const liProjets = document.createElement("li");
+liProjets.innerText = "projets";
+
+const liContact = document.createElement("li");
+liContact.innerText = "contact";
+
+const liLogin = document.createElement("li");
+liLogin.innerHTML = "<a href=login.html>login</a>";
+liLogin.classList.add("login")
+
+const liInsta = document.createElement("li");
+liInsta.innerHTML = "<img src=./assets/icons/instagram.png alt=Instagram>"
+
+li.appendChild(liProjets)
+li.appendChild(liContact)
+li.appendChild(liLogin)
+li.appendChild(liInsta)
+
+}
+
+liPCL();
+
 // Fonction pour afficher TOUS les projets au chargement de la page
 async function genererProjets() {
     try {
@@ -145,7 +171,7 @@ async function genererBoutonsCategories() {
         modifierProjets.innerHTML = '<i class="fa-regular fa-pen-to-square" style="color: black; padding-right: 5px; padding-left: 10px;"></i>modifier';
         modifierProjets.classList.add("modifierProjets");
 
-        modif.appendChild(modifierProjets)
+        modif.appendChild(modifierProjets);
 
         // Supprime la divBoutons et l'espace alloué
         const divBoutons = document.querySelector(".boutons"); // Rechercher la div après ajout des boutons
@@ -431,7 +457,8 @@ async function afficherProjetsModale() {
 
                 // parametres fonction "verifierChamps" à charger avant la fonction
                 btnValider.setAttribute("disabled", "true"); // Désactive le bouton
-                btnValider.style.backgroundColor = "gray"; // Optionnel : changer la couleur
+                btnValider.style.backgroundColor = "gray"; // Change la couleur du bouton
+                btnValider.style.borderColor = "gray"; // Change la couleur de sa bordure
                 const inputFile2 = document.querySelector("input[type='file']");
                 const titreForm2 = document.querySelector("input[name='titre']");
                 const selectCategorie = document.querySelector(".menuDeroulant"); // Si tu as un select pour la catégorie
