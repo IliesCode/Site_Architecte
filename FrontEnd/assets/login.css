@@ -1,0 +1,14 @@
+html {
+    background-color: white;
+}
+
+
+#mdp {
+    margin-bottom: 20px;
+}
+
+button {
+    font-family: syne;
+    color: white;
+    background-color: #1D6154;
+}
