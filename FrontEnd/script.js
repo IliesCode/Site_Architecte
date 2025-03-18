@@ -348,6 +348,29 @@ openModal.addEventListener("click", afficherProjetsModale);
         iconeSuppr.classList.add("fa", "fa-trash", "iconeSupprimer"); // Ajout des classes  pour pouvoir appliquer un style à l'icône
         iconeSuppr.setAttribute("data-id", projet.id); // Ajout d'un attribut "data-id" à l'icône, pour pouvoir identifier quel projet supprimer
 
+
+        // FLETCH DELETE
+        iconeSuppr.addEventListener("click", async function(){
+            const token = localStorage.getItem("token");
+            const id = this.getAttribute("data-id"); // Utilisation de this et getAttribute car je suis dans l'icone suppr 
+            const removeProjet = await fetch(`http://localhost:5678/api/works/${id}`, {
+                method: "DELETE",
+                headers: {
+                    "Authorization": `Bearer ${token}`, // Ajout du token
+                    "Accept": "application/json",
+                },
+                })
+                
+            if (removeProjet.ok) {
+                
+                // Recharge la galerie principale
+                await genererProjets();
+                
+                // Recharge la galerie modale
+                afficherProjetsModale();
+            }
+        })
+        
         // Ajout des éléments au projet
         projetElement.appendChild(imageElement);
         projetElement.appendChild(iconeSuppr);
@@ -356,6 +379,7 @@ openModal.addEventListener("click", afficherProjetsModale);
         galerieModale.appendChild(projetElement);
     });
 }
+
 
 
 
@@ -522,32 +546,45 @@ async function afficherProjetsModale() {
     // btnValider.style.backgroundColor = "gray";}
 
 
-    btnValider.addEventListener("click", function(){
-        console.log("uhoo");
+    btnValider.addEventListener("click", async function(){
         const token = localStorage.getItem("token");
-        console.log(localStorage.getItem("token"));
-        console.log(document.querySelector("input[type='file']").value);
-        console.log(document.querySelector("input[name='titre']").value);
-        console.log(document.querySelector(".menuDeroulant").value);
+        // Récupère la valeur des données entrées dans les champs
+        const imageFile = document.querySelector("input[type='file']").files[0];
+        const getTitle = document.querySelector("input[name='titre']").value;
+        const getcategory = document.querySelector(".menuDeroulant").value;
+        // Créé un formData accepté par l'API
+        const sendForm = new FormData();
 
-        const newProjet = fetch('http://localhost:5678/api/works', {
+        sendForm.append("image", imageFile)
+        sendForm.append("title", getTitle)
+        sendForm.append("category", getcategory)
+        const newProjet = await fetch('http://localhost:5678/api/works', {
             method: "POST",
             headers: {
                 "Authorization": `Bearer ${token}`, // Ajout du token
                 "Accept": "application/json",
             },
-                body: JSON.stringify({
-                image: document.querySelector("input[type='file']").value,
-                title: document.querySelector("input[name='titre']").value,
-                category: document.querySelector(".menuDeroulant").value,
+                body: sendForm //Envoie du formData
             })
-            })
+
+        if (newProjet.ok) {
+
+            // Reset la valeur à true
+            reset(); 
+            
+            // Recharge la galerie principale
+            await genererProjets();
+            
+            // Recharge la galerie modale
+            afficherProjetsModale();
+        }
         })
+
     
 
 
 
-        // retour 
+        // Fonction retour 
         flecheRetour.addEventListener("click", async function(){
             galerieModale.innerHTML = "";
             const projets = await allProjects(); // Récupération des projets
@@ -571,6 +608,8 @@ async function afficherProjetsModale() {
             photosAjoutees = true;
             console.log("depanne");
         })
+
+
 
         
 
