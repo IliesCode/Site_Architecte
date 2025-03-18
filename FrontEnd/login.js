@@ -47,32 +47,14 @@
 
 
 
-// Affichage des Li projets contact login
-function li2PCL () {
-    console.log("dada");
-    const li2 = document.querySelector(".pcl20");
-    
-    const li2Projets = document.createElement("li");
-    li2Projets.innerText = "projets";
-    
-    const li2Contact = document.createElement("li");
-    li2Contact.innerText = "contact";
-    
-    const li2Login = document.createElement("li");
-    li2Login.innerHTML = "<a href=login.html>login</a>";
-    li2Login.classList.add("login")
-    
-    const li2Insta = document.createElement("li");
-    li2Insta.innerHTML = "<img src=./assets/icons/instagram.png alt=Instagram>"
-    console.log("paap");
-    li2.appendChild(li2Projets)
-    li2.appendChild(li2Contact)
-    li2.appendChild(li2Login)
-    li2.appendChild(li2Insta)
-    
-    }
-    
-    // li2PCL();
+
+
+
+
+import { liPCL } from "./export.js";
+
+liPCL();
+
 
 export async function connexionUser() {
     const requeteConnexion = document.querySelector("#connexion");

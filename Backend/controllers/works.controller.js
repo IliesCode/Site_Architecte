@@ -12,7 +12,7 @@ exports.create = async (req, res) => {
 	const categoryId = req.body.category;
 	const userId = req.auth.userId;
 	const imageUrl = `${req.protocol}://${host}/images/${req.file.filename}`;
-	try{
+		try{
 		const work = await Works.create({
 			title,
 			imageUrl,

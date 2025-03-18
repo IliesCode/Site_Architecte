@@ -374,3 +374,28 @@ input {
 	padding-left: 20px;
 }
 
+.imgFile {
+	padding-top: 50px;
+	width: 150px;
+	height: 150px;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	flex-direction: column;
+}
+
+.arrow {
+	position: absolute;
+	top: 50px;
+	left: 50px;
+	font-size: 30px;
+	cursor: pointer;
+}
+
+.close svg {
+	position: absolute;
+	top: 50px;
+	left: -80px;
+	width: 50px;
+	height: 50px;
+}

@@ -1,6 +1,6 @@
 html {
-    background-color: white;
-}
+height: 100%;
+} 
 
 
 #mdp {
@@ -11,4 +11,18 @@ button {
     font-family: syne;
     color: white;
     background-color: #1D6154;
+}
+
+
+.pcl {
+    display: flex;
+    justify-content: flex-end;
+}
+
+body {
+    width: 1440px;
+}
+
+footer {
+    background-color: white;
 }

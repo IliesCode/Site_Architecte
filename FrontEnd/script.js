@@ -67,31 +67,6 @@ function afficherProjets(projets) {
 
 
 
-// Affichage des Li projets contact login
-export function liPCL () {
-const li = document.querySelector(".pcl");
-
-const liProjets = document.createElement("li");
-liProjets.innerText = "projets";
-
-const liContact = document.createElement("li");
-liContact.innerText = "contact";
-
-const liLogin = document.createElement("li");
-liLogin.innerHTML = "<a href=login.html>login</a>";
-liLogin.classList.add("login")
-
-const liInsta = document.createElement("li");
-liInsta.innerHTML = "<img src=./assets/icons/instagram.png alt=Instagram>"
-
-li.appendChild(liProjets)
-li.appendChild(liContact)
-li.appendChild(liLogin)
-li.appendChild(liInsta)
-
-}
-
-liPCL();
 
 // Fonction pour afficher TOUS les projets au chargement de la page
 async function genererProjets() {
@@ -184,9 +159,19 @@ genererBoutonsCategories();
 
 
 
+// function btnColor() {
+//     bouton.addEventListener("click", function (){
+//         if (afficherProjets(projets)) {
+//             bouton.style.backgroundColor = "green";
+//         }
+//     });
+// }
 
 
 
+// function categorieClicked () {
+//     if 
+// }
 
 // // Exécute la fonction après le chargement du DOM
 document.addEventListener("DOMContentLoaded", function () {
@@ -314,9 +299,13 @@ const overlay = document.querySelector(".overlay");
 const openModal = document.querySelector(".modifierProjets");
 const closeModal = document.querySelector(".close");
 
+function reset() {
+    photosAjoutees = true;
+};
 
 // Ouverture modale
 openModal.addEventListener("click", function  () {
+    reset();
     modal.style.display = "flex";
     overlay.style.display = "flex";
 })
@@ -326,11 +315,13 @@ openModal.addEventListener("click", function  () {
 closeModal.addEventListener("click", function  () {
     modal.style.display = "none"
     overlay.style.display = "none";
+    reset();
 })
 
 overlay.addEventListener("click", function  () {
     modal.style.display = "none"
     overlay.style.display = "none";
+    reset();
 })
 
 
@@ -392,15 +383,26 @@ async function afficherProjetsModale() {
         // Affichage de l'interface d'ajout de photo
         galerieModale.innerHTML = ""; // Nettoyage avant d'ajouter le contenu
 
+        const flecheRetour = document.createElement("i");
+        flecheRetour.classList.add("fa-solid", "fa-arrow-left", "arrow");
+
+
         const txtAjoutPhoto = document.createElement("h2");
         txtAjoutPhoto.innerText = "Ajout Photo";
 
         const ajouterPhotoRectanlge = document.createElement("div");
         ajouterPhotoRectanlge.classList.add("rectangle");
 
+        const formFile = document.createElement("form")
+        formFile.action = "/upload";
+        formFile.method = "POST";
 
         const inputFile = document.createElement("input");
         inputFile.type = "file";
+        inputFile.name = "avatar";
+        inputFile.enctype = "multipart/form-data";
+        inputFile.classList.add("imgFile");
+       
         
         // Ajout de la catégorie titre
 
@@ -483,7 +485,8 @@ async function afficherProjetsModale() {
         galerieModale.appendChild(txtAjoutPhoto);
         galerieModale.appendChild(ajouterPhotoRectanlge);
         galerieModale.appendChild(ajoutTitre);
-        galerieModale.appendChild(titreForm)
+        galerieModale.appendChild(titreForm);
+        galerieModale.appendChild(flecheRetour);
 
 
 
@@ -519,13 +522,57 @@ async function afficherProjetsModale() {
     // btnValider.style.backgroundColor = "gray";}
 
 
+    btnValider.addEventListener("click", function(){
+        console.log("uhoo");
+        const token = localStorage.getItem("token");
+        console.log(localStorage.getItem("token"));
+        console.log(document.querySelector("input[type='file']").value);
+        console.log(document.querySelector("input[name='titre']").value);
+        console.log(document.querySelector(".menuDeroulant").value);
+
+        const newProjet = fetch('http://localhost:5678/api/works', {
+            method: "POST",
+            headers: {
+                "Authorization": `Bearer ${token}`, // Ajout du token
+                "Accept": "application/json",
+            },
+                body: JSON.stringify({
+                image: document.querySelector("input[type='file']").value,
+                title: document.querySelector("input[name='titre']").value,
+                category: document.querySelector(".menuDeroulant").value,
+            })
+            })
+        })
+    
 
 
 
+        // retour 
+        flecheRetour.addEventListener("click", async function(){
+            galerieModale.innerHTML = "";
+            const projets = await allProjects(); // Récupération des projets
+            projetModale(projets, galerieModale); // Affichage des projets dans la modale
+            galerieModale.innerHTML = "<h2>Galerie photo</h2>"; // Titre
 
+            
 
+            // reparametre le bouton "ajouter une photo"
+            const btnAjoutPhoto = document.querySelector(".ajoutPhoto");
+            btnAjoutPhoto.innerHTML = "Ajouter une photo";
 
+            // permet au bouton d'être recliquable 
+            btnAjoutPhoto.removeAttribute("disabled");
 
+            const clrBtn = document.querySelector(".ajoutPhoto");
+            clrBtn.style.backgroundColor = "#1D6154";
+
+            
+            projetModale(projets, galerieModale);
+            photosAjoutees = true;
+            console.log("depanne");
+        })
+
+        
 
 
     } else {
@@ -534,7 +581,21 @@ async function afficherProjetsModale() {
             const projets = await allProjects(); 
             galerieModale.innerHTML = "<h2>Galerie photo</h2>"; // Titre
 
+            
+
+            // reparametre le bouton "ajouter une photo"
+            const btnAjoutPhoto = document.querySelector(".ajoutPhoto");
+            btnAjoutPhoto.innerHTML = "Ajouter une photo";
+
+            // permet au bouton d'être recliquable 
+            btnAjoutPhoto.removeAttribute("disabled");
+
+            const clrBtn = document.querySelector(".ajoutPhoto");
+            clrBtn.style.backgroundColor = "#1D6154";
+
+            
             projetModale(projets, galerieModale);
+            photosAjoutees = true;
         } catch (error) {
             console.error("Erreur lors de l'affichage des projets dans la modale :", error);
         }
