@@ -33,11 +33,55 @@ fetch('http://localhost:5678/api/works')
 
 import { verifierConnexion } from "./login.js";
 
+const btnValider = document.querySelector(".valider");
+const btnAjoutPhoto = document.querySelector(".ajoutPhoto");
+
 // Fonction pour récupérer tous les projets depuis l'API
 async function allProjects() {
     const reponse = await fetch('http://localhost:5678/api/works');
     return await reponse.json(); // Convertir en JSON et retourner les projets
 }
+
+
+// fonction submit des nouveaux projets
+async function gestionSubmit(event) {
+    event.preventDefault();
+    const token = localStorage.getItem("token");
+
+    const imageFile = document.querySelector("input[type='file']").files[0];
+    const getTitle = document.querySelector("input[name='titre']").value;
+    const getcategory = document.querySelector(".menuDeroulant").value;
+
+    const sendForm = new FormData();
+    sendForm.append("image", imageFile);
+    sendForm.append("title", getTitle);
+    sendForm.append("category", getcategory);
+
+    const newProjet = await fetch('http://localhost:5678/api/works', {
+        method: "POST",
+        headers: {
+            "Authorization": `Bearer ${token}`, // Correction de l'interpolation
+            "Accept": "application/json",
+        },
+        body: sendForm
+    });
+
+    if (newProjet.ok) {
+        reset(); // Reset les champs
+        await genererProjets(); // Recharge la galerie principale
+        afficherProjetsModale(); // Recharge la galerie modale
+
+        modal.style.display = "none";
+        overlay.style.display = "none";
+    }
+}
+
+// retire et ajoute de nouveau l'event listener pour pallier au probleme de doublon
+function attachEventListener() {
+    btnValider.removeEventListener("click", gestionSubmit); 
+    btnValider.addEventListener("click", gestionSubmit);
+} 
+
 
 // Fonction pour afficher les projets dans la galerie
 function afficherProjets(projets) {
@@ -81,6 +125,82 @@ async function genererProjets() {
 genererProjets();
 
 
+        // Ajout du menu déroulant des catégories 
+
+        async function genererMenuCategories() {
+            
+            // Récupération des catégories depuis l'API
+            const reponse = await fetch('http://localhost:5678/api/categories');
+            const categories = await reponse.json();
+            
+            // Sélection du conteneur où ajouter le menu
+            const container = document.querySelector(".galleryModale");
+            // container.innerHTML = ""; // Nettoie le conteneur pour éviter les doublons
+    
+
+            // Ajout du titre "catégorie"
+            const categorieTitre = document.createElement("h3");
+            categorieTitre.innerHTML = "Catégorie";
+            categorieTitre.classList.add("ajoutTitre");
+            container.appendChild(categorieTitre);
+
+
+            // Création du menu déroulant
+            const select = document.createElement("select");
+            select.classList.add("menuDeroulant"); // Classe pour le style
+            container.appendChild(select);
+
+        
+            // Ajoute une option par défaut
+            const optionDefaut = document.createElement("option");
+            optionDefaut.value = "";
+            optionDefaut.innerText = "";
+            select.appendChild(optionDefaut);
+        
+            // Remplit le menu déroulant avec les catégories
+            categories.forEach(categorie => {
+                const option = document.createElement("option");
+                option.value = categorie.id;
+                option.innerText = categorie.name;
+                select.appendChild(option);
+            });
+
+
+            // parametres fonction "verifierChamps" à charger avant la fonction
+            btnValider.setAttribute("disabled", "true"); // Désactive le bouton
+            btnValider.style.backgroundColor = "gray"; // Change la couleur du bouton
+            btnValider.style.borderColor = "gray"; // Change la couleur de sa bordure
+            const inputFile2 = document.querySelector("input[type='file']");
+            const titreForm2 = document.querySelector("input[name='titre']");
+            const selectCategorie = document.querySelector(".menuDeroulant"); // Si tu as un select pour la catégorie
+            console.log(inputFile2);
+            
+            inputFile2.addEventListener("change", verifierChamps);
+            titreForm2.addEventListener("input", verifierChamps);
+            selectCategorie.addEventListener("change", verifierChamps);
+    }
+
+    function verifierChamps() {
+
+        const inputFile2 = document.querySelector("input[type='file']");
+        const titreForm2 = document.querySelector("input[name='titre']");
+        const selectCategorie = document.querySelector(".menuDeroulant"); // Si tu as un select pour la catégorie
+        console.log(inputFile2);
+
+        console.log('verifierChamps');
+    
+
+            if (inputFile2.files.length > 0 && titreForm2.value.trim() !== "" && selectCategorie.value !== "") {
+                console.log("2258");
+                btnValider.removeAttribute("disabled"); // Active le bouton
+                btnValider.style.backgroundColor = "#1D6154"; // Optionnel : changer la couleur
+            }else{
+                btnValider.setAttribute("disabled", "true"); // Désactive le bouton
+                btnValider.style.backgroundColor = "gray"; // Optionnel : changer la couleur
+            }
+        }
+
+
 
 
 // Fonction asynchrone pour générer les boutons des catégories
@@ -100,7 +220,7 @@ async function genererBoutonsCategories() {
          // Créé une div pour contenir les boutons
          const divBoutons = document.createElement("div");
          divBoutons.classList.add("boutons"); // Classe pour la div (si besoin, peut être utilisée pour le style)
-
+        
         // Objet pour stocker les catégories uniques (évite les doublons)
         const categoriesUniques = {};
 
@@ -115,6 +235,7 @@ async function genererBoutonsCategories() {
         const boutonTous = document.createElement("button");
         boutonTous.innerText = "Tous"; // Texte du bouton
         boutonTous.classList.add("filtre-bouton"); // Ajout d'une classe pour le style
+        boutonTous.classList.add("btnVert");
         boutonTous.addEventListener("click", () => afficherProjets(projets)); // Affichage de tous les projets au clic
         container.appendChild(boutonTous); // Ajout du bouton dans le conteneur
 
@@ -123,18 +244,25 @@ async function genererBoutonsCategories() {
             const bouton = document.createElement("button"); // Création du bouton
             bouton.innerText = name; // Texte du bouton = nom de la catégorie
             bouton.classList.add("filtre-bouton"); // Ajout d'une classe pour le style
+            
 
             // Ajout d'un event listener pour filtrer les projets par catégorie
-            bouton.addEventListener("click", () => {
-                const projetsFiltres = projets.filter(projet => projet.category.id === parseInt(id)); // Filtrage
-                afficherProjets(projetsFiltres); // Affichage des projets filtrés
-            });
+            bouton.forEach.addEventListener("click", (event) => {
+                bouton.style.backgroundColor = "black";
+                event.target.style.backgroundColor = "pink";
 
+                const projetsFiltres = projets.filter(projet => projet.category.id === parseInt(id)); // Filtrage
+
+                // modifs ici 
+
+            });
             container.appendChild(bouton); // Ajout du bouton dans le conteneur
         });
 
         // Ajout des boutons dans le conteneur
         divBoutons.appendChild(bouton);
+
+
 
     } catch (error) {
         console.error("Erreur lors de la récupération des catégories :", error); // Gestion des erreurs
@@ -158,20 +286,6 @@ async function genererBoutonsCategories() {
 genererBoutonsCategories();
 
 
-
-// function btnColor() {
-//     bouton.addEventListener("click", function (){
-//         if (afficherProjets(projets)) {
-//             bouton.style.backgroundColor = "green";
-//         }
-//     });
-// }
-
-
-
-// function categorieClicked () {
-//     if 
-// }
 
 // // Exécute la fonction après le chargement du DOM
 document.addEventListener("DOMContentLoaded", function () {
@@ -303,6 +417,7 @@ function reset() {
     photosAjoutees = true;
 };
 
+
 // Ouverture modale
 openModal.addEventListener("click", function  () {
     reset();
@@ -390,6 +505,7 @@ openModal.addEventListener("click", afficherProjetsModale);
 
 let photosAjoutees = true;
 
+
 // Ajout de l'événement au chargement de la page
 document.addEventListener("DOMContentLoaded", () => {
     const ajouterPhoto = document.querySelector(".ajoutPhoto");
@@ -405,6 +521,8 @@ async function afficherProjetsModale() {
 
     if (photosAjoutees === false) { 
         // Affichage de l'interface d'ajout de photo
+        
+        console.log("falseeeee");
         galerieModale.innerHTML = ""; // Nettoyage avant d'ajouter le contenu
 
         const flecheRetour = document.createElement("i");
@@ -438,62 +556,8 @@ async function afficherProjetsModale() {
         titreForm.type = "text"; // Définit le type d'input
         titreForm.name = "titre"; // Donne un nom à l'input
         
-
-
-        // Ajout du menu déroulant des catégories 
-
-        async function genererMenuCategories() {
-            
-                // Récupération des catégories depuis l'API
-                const reponse = await fetch('http://localhost:5678/api/categories');
-                const categories = await reponse.json();
-                
-                // Sélection du conteneur où ajouter le menu
-                const container = document.querySelector(".galleryModale");
-                // container.innerHTML = ""; // Nettoie le conteneur pour éviter les doublons
         
 
-                // Ajout du titre "catégorie"
-                const categorieTitre = document.createElement("h3");
-                categorieTitre.innerHTML = "Catégorie";
-                categorieTitre.classList.add("ajoutTitre");
-                container.appendChild(categorieTitre);
-
-
-                // Création du menu déroulant
-                const select = document.createElement("select");
-                select.classList.add("menuDeroulant"); // Classe pour le style
-                container.appendChild(select);
-
-            
-                // Ajoute une option par défaut
-                const optionDefaut = document.createElement("option");
-                optionDefaut.value = "";
-                optionDefaut.innerText = "";
-                select.appendChild(optionDefaut);
-            
-                // Remplit le menu déroulant avec les catégories
-                categories.forEach(categorie => {
-                    const option = document.createElement("option");
-                    option.value = categorie.id;
-                    option.innerText = categorie.name;
-                    select.appendChild(option);
-                });
-
-
-                // parametres fonction "verifierChamps" à charger avant la fonction
-                btnValider.setAttribute("disabled", "true"); // Désactive le bouton
-                btnValider.style.backgroundColor = "gray"; // Change la couleur du bouton
-                btnValider.style.borderColor = "gray"; // Change la couleur de sa bordure
-                const inputFile2 = document.querySelector("input[type='file']");
-                const titreForm2 = document.querySelector("input[name='titre']");
-                const selectCategorie = document.querySelector(".menuDeroulant"); // Si tu as un select pour la catégorie
-                console.log(inputFile2);
-                
-                inputFile2.addEventListener("change", verifierChamps);
-                titreForm2.addEventListener("input", verifierChamps);
-                selectCategorie.addEventListener("change", verifierChamps);
-        }
 
         // Appeler la fonction pour afficher le menu au chargement de la page
         genererMenuCategories();
@@ -502,8 +566,8 @@ async function afficherProjetsModale() {
             
 
         // renomme le btn en "valider"
-        const btnValider = document.querySelector(".ajoutPhoto");
-        btnValider.innerHTML = "Valider";
+        
+        
 
         ajouterPhotoRectanlge.appendChild(inputFile);
         galerieModale.appendChild(txtAjoutPhoto);
@@ -518,69 +582,12 @@ async function afficherProjetsModale() {
 
         
         
-    function verifierChamps() {
 
-        const inputFile2 = document.querySelector("input[type='file']");
-        const titreForm2 = document.querySelector("input[name='titre']");
-        const selectCategorie = document.querySelector(".menuDeroulant"); // Si tu as un select pour la catégorie
-        console.log(inputFile2);
+        verifierChamps();
+        
 
-        console.log('verifierChamps');
-    
-
-            if (inputFile2.files.length > 0 && titreForm2.value.trim() !== "" && selectCategorie.value !== "") {
-                console.log("2258");
-                btnValider.removeAttribute("disabled"); // Active le bouton
-                btnValider.style.backgroundColor = "#1D6154"; // Optionnel : changer la couleur
-            }else{
-                btnValider.setAttribute("disabled", "true"); // Désactive le bouton
-                btnValider.style.backgroundColor = "gray"; // Optionnel : changer la couleur
-            }
-        }
-    // inputFile2.addEventListener("change", verifierChamps);
-    // titreForm2.addEventListener("input", verifierChamps);
-    // selectCategorie.addEventListener("change", verifierChamps);
-
-    // document.addEventListener("DOMContentLoaded", () => {
-    // btnValider.setAttribute("disabled", "true");
-    // btnValider.style.backgroundColor = "gray";}
-
-
-    btnValider.addEventListener("click", async function(){
-        const token = localStorage.getItem("token");
-        // Récupère la valeur des données entrées dans les champs
-        const imageFile = document.querySelector("input[type='file']").files[0];
-        const getTitle = document.querySelector("input[name='titre']").value;
-        const getcategory = document.querySelector(".menuDeroulant").value;
-        // Créé un formData accepté par l'API
-        const sendForm = new FormData();
-
-        sendForm.append("image", imageFile)
-        sendForm.append("title", getTitle)
-        sendForm.append("category", getcategory)
-        const newProjet = await fetch('http://localhost:5678/api/works', {
-            method: "POST",
-            headers: {
-                "Authorization": `Bearer ${token}`, // Ajout du token
-                "Accept": "application/json",
-            },
-                body: sendForm //Envoie du formData
-            })
-
-        if (newProjet.ok) {
-
-            // Reset la valeur à true
-            reset(); 
-            
-            // Recharge la galerie principale
-            await genererProjets();
-            
-            // Recharge la galerie modale
-            afficherProjetsModale();
-        }
-        })
-
-    
+        attachEventListener();
+        
 
 
 
@@ -593,12 +600,14 @@ async function afficherProjetsModale() {
 
             
 
-            // reparametre le bouton "ajouter une photo"
-            const btnAjoutPhoto = document.querySelector(".ajoutPhoto");
-            btnAjoutPhoto.innerHTML = "Ajouter une photo";
+            let isRequestSent = false;
 
-            // permet au bouton d'être recliquable 
-            btnAjoutPhoto.removeAttribute("disabled");
+            btnAjoutPhoto.addEventListener("click", function () {
+                if (isRequestSent) return; // Bloque si déjà envoyé
+                isRequestSent = true;
+        
+            });
+            
 
             const clrBtn = document.querySelector(".ajoutPhoto");
             clrBtn.style.backgroundColor = "#1D6154";
@@ -606,35 +615,28 @@ async function afficherProjetsModale() {
             
             projetModale(projets, galerieModale);
             photosAjoutees = true;
-            console.log("depanne");
+            
+            btnValider.style.display = "none";
+            btnAjoutPhoto.style.display = "block";
         })
 
+        btnValider.style.backgroundColor = "#1D6154";
+
+        btnAjoutPhoto.style.display = "none";
+        btnValider.style.display = "block";
 
 
         
-
-
     } else {
         // Affichage des projets
         try {
             const projets = await allProjects(); 
             galerieModale.innerHTML = "<h2>Galerie photo</h2>"; // Titre
 
-            
-
-            // reparametre le bouton "ajouter une photo"
-            const btnAjoutPhoto = document.querySelector(".ajoutPhoto");
-            btnAjoutPhoto.innerHTML = "Ajouter une photo";
-
-            // permet au bouton d'être recliquable 
-            btnAjoutPhoto.removeAttribute("disabled");
-
-            const clrBtn = document.querySelector(".ajoutPhoto");
-            clrBtn.style.backgroundColor = "#1D6154";
-
-            
             projetModale(projets, galerieModale);
-            photosAjoutees = true;
+            
+            btnValider.style.display = "none";
+            btnAjoutPhoto.style.display = "block";
         } catch (error) {
             console.error("Erreur lors de l'affichage des projets dans la modale :", error);
         }

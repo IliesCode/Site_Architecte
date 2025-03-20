@@ -452,3 +452,26 @@ input #file {
     display : block;
     margin-top : 10px;
 }
+
+button.valider {
+    display: flex;
+	flex-direction: row;
+	border-radius: 25px;
+	justify-content: center;
+	align-items: center;
+	margin-left: 10px;
+	height: 40px;
+	color: #ffffff;
+    background-color: #1D6154;
+	width: 237px;
+	border: 1px solid #1D6154;
+	font-family: syne;
+	padding-left: 10px;
+	padding-right: 10px;
+	font-size: medium;
+	cursor: pointer;
+    margin-top: 30px;
+    padding: 10px;
+    padding-right: 20px;
+    padding-left: 20px;
+}
