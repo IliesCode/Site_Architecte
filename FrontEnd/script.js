@@ -247,15 +247,16 @@ async function genererBoutonsCategories() {
             
 
             // Ajout d'un event listener pour filtrer les projets par catégorie
-            bouton.forEach.addEventListener("click", (event) => {
-                bouton.style.backgroundColor = "black";
-                event.target.style.backgroundColor = "pink";
+            // bouton.forEach(bouton)
+            // .addEventListener("click", (event) => {
+            //     bouton.style.backgroundColor = "black";
+            //     event.target.style.backgroundColor = "pink";
 
-                const projetsFiltres = projets.filter(projet => projet.category.id === parseInt(id)); // Filtrage
+            //     const projetsFiltres = projets.filter(projet => projet.category.id === parseInt(id)); // Filtrage
 
-                // modifs ici 
+            //     // modifs ici 
 
-            });
+            // });
             container.appendChild(bouton); // Ajout du bouton dans le conteneur
         });
 
