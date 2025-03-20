@@ -235,9 +235,21 @@ async function genererBoutonsCategories() {
         const boutonTous = document.createElement("button");
         boutonTous.innerText = "Tous"; // Texte du bouton
         boutonTous.classList.add("filtre-bouton"); // Ajout d'une classe pour le style
-        boutonTous.classList.add("btnVert");
         boutonTous.addEventListener("click", () => afficherProjets(projets)); // Affichage de tous les projets au clic
         container.appendChild(boutonTous); // Ajout du bouton dans le conteneur
+
+
+        boutonTous.addEventListener("click", (event) => {  
+    
+            document.querySelectorAll(".filtre-bouton").forEach((element) => { 
+            console.log("pa");
+            element.style.backgroundColor = "#fefef2";
+            element.style.color = "#1D6154";
+            event.target.style.color = "#fefef2"
+            event.target.style.backgroundColor = "#1D6154";
+        });
+    });
+
 
         // Création des boutons pour chaque catégorie trouvée
         Object.entries(categoriesUniques).forEach(([id, name]) => {
@@ -247,21 +259,27 @@ async function genererBoutonsCategories() {
             
 
             // Ajout d'un event listener pour filtrer les projets par catégorie
-            // bouton.forEach(bouton)
-            // .addEventListener("click", (event) => {
-            //     bouton.style.backgroundColor = "black";
-            //     event.target.style.backgroundColor = "pink";
+            
+                bouton.addEventListener("click", (event) => {  
+    
+                    document.querySelectorAll(".filtre-bouton").forEach((element) => { 
+                    console.log("pa");
+                    element.style.backgroundColor = "#fefef2";
+                    element.style.color = "#1D6154";
+                    event.target.style.color = "#fefef2"
+                    event.target.style.backgroundColor = "#1D6154";
+                });
 
-            //     const projetsFiltres = projets.filter(projet => projet.category.id === parseInt(id)); // Filtrage
 
-            //     // modifs ici 
+                const projetsFiltres = projets.filter(projet => projet.category.id === parseInt(id)); // Filtrage
+                afficherProjets(projetsFiltres);
 
-            // });
-            container.appendChild(bouton); // Ajout du bouton dans le conteneur
+            });
+            container.appendChild(bouton); // Ajout du bouton dans le conteneur        // Ajout des boutons dans le conteneur
+            
         });
 
-        // Ajout des boutons dans le conteneur
-        divBoutons.appendChild(bouton);
+
 
 
 
