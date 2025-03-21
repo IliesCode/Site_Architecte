@@ -405,3 +405,13 @@ input {
 	background-color: #1D6154;
 	color: #fefef2;
 }
+
+.couleurBtnTous {
+ background-color: #1D6154;
+ color: #fefef2;
+}
+
+.couleurBtn {
+	color: #1D6154;
+	background-color: #fefef2;
+   }

@@ -234,14 +234,15 @@ async function genererBoutonsCategories() {
         // Création d'un bouton "Tous" pour afficher tous les projets
         const boutonTous = document.createElement("button");
         boutonTous.innerText = "Tous"; // Texte du bouton
-        boutonTous.classList.add("filtre-bouton"); // Ajout d'une classe pour le style
+        boutonTous.classList.add("filtreBouton"); // Ajout d'une classe pour le style
+        boutonTous.classList.add("couleurBtnTous");
         boutonTous.addEventListener("click", () => afficherProjets(projets)); // Affichage de tous les projets au clic
         container.appendChild(boutonTous); // Ajout du bouton dans le conteneur
 
 
         boutonTous.addEventListener("click", (event) => {  
     
-            document.querySelectorAll(".filtre-bouton").forEach((element) => { 
+            document.querySelectorAll(".filtreBouton").forEach((element) => { 
             console.log("pa");
             element.style.backgroundColor = "#fefef2";
             element.style.color = "#1D6154";
@@ -255,14 +256,14 @@ async function genererBoutonsCategories() {
         Object.entries(categoriesUniques).forEach(([id, name]) => {
             const bouton = document.createElement("button"); // Création du bouton
             bouton.innerText = name; // Texte du bouton = nom de la catégorie
-            bouton.classList.add("filtre-bouton"); // Ajout d'une classe pour le style
+            bouton.classList.add("filtreBouton"); // Ajout d'une classe pour le style
             
 
             // Ajout d'un event listener pour filtrer les projets par catégorie
             
                 bouton.addEventListener("click", (event) => {  
     
-                    document.querySelectorAll(".filtre-bouton").forEach((element) => { 
+                    document.querySelectorAll(".filtreBouton").forEach((element) => { 
                     console.log("pa");
                     element.style.backgroundColor = "#fefef2";
                     element.style.color = "#1D6154";
@@ -661,10 +662,3 @@ async function afficherProjetsModale() {
         }
     }
 }
-
-
-
-
-
-
-
