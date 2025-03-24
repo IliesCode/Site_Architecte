@@ -11,10 +11,12 @@ export function liPCL () {
     
     const liLogin = document.createElement("li");
     liLogin.innerHTML = "<a href=login.html>login</a>";
-    liLogin.classList.add("login")
+    liLogin.classList.add("login");
+    liLogin.classList.add("logoLogin")
     
     const liInsta = document.createElement("li");
     liInsta.innerHTML = "<img src=./assets/icons/instagram.png alt=Instagram>"
+    liInsta.classList.add("logoInsta")
     
     li.appendChild(liProjets)
     li.appendChild(liContact)

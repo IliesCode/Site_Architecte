@@ -67,7 +67,6 @@ export async function connexionUser() {
         const password = document.querySelector("#mdp").value;
         
         console.log(JSON.stringify({ email, password }));
-       console.log("print4");
         try {
             const reponse = await fetch("http://localhost:5678/api/users/login", {
                 method: "POST",

@@ -542,7 +542,6 @@ async function afficherProjetsModale() {
     if (photosAjoutees === false) { 
         // Affichage de l'interface d'ajout de photo
         
-        console.log("falseeeee");
         galerieModale.innerHTML = ""; // Nettoyage avant d'ajouter le contenu
 
         const flecheRetour = document.createElement("i");
@@ -555,6 +554,32 @@ async function afficherProjetsModale() {
         const ajouterPhotoRectanlge = document.createElement("div");
         ajouterPhotoRectanlge.classList.add("rectangle");
 
+        const sousRectangle = document.createElement("div");
+        sousRectangle.classList.add("sousRectangle");
+        sousRectangle.style.display = "none";
+
+        // Créer l'élément image
+        const imageRectangle = document.createElement("i");
+        imageRectangle.classList.add("fa-regular", "fa-image", "imageRectangle");
+
+
+        
+// Ajouter l'image à la div
+
+
+        const btnUpload = document.createElement("button");
+        btnUpload.innerHTML = " + Ajouter Photo";
+        // Clique sur l'input lors du clique sur le btn
+        btnUpload.addEventListener("click", function () {
+            inputFile.click();
+        });
+
+        btnUpload.addEventListener("change", function () {
+            btnUpload.style.display = "none";
+            imageRectangle.style.display = "none";
+            sousRectangle.style.display = "block";
+        })
+
         const formFile = document.createElement("form")
         formFile.action = "/upload";
         formFile.method = "POST";
@@ -565,7 +590,7 @@ async function afficherProjetsModale() {
         inputFile.enctype = "multipart/form-data";
         inputFile.classList.add("imgFile");
        
-        
+
         // Ajout de la catégorie titre
 
         const ajoutTitre = document.createElement("h3");
@@ -582,14 +607,13 @@ async function afficherProjetsModale() {
         // Appeler la fonction pour afficher le menu au chargement de la page
         genererMenuCategories();
         
-
-            
-
-        // renomme le btn en "valider"
         
         
 
-        ajouterPhotoRectanlge.appendChild(inputFile);
+        btnUpload.appendChild(inputFile);
+        ajouterPhotoRectanlge.appendChild(imageRectangle);
+        ajouterPhotoRectanlge.appendChild(btnUpload);
+        ajouterPhotoRectanlge.appendChild(sousRectangle)
         galerieModale.appendChild(txtAjoutPhoto);
         galerieModale.appendChild(ajouterPhotoRectanlge);
         galerieModale.appendChild(ajoutTitre);

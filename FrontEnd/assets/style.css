@@ -375,14 +375,13 @@ input {
 }
 
 .imgFile {
-	padding-top: 50px;
-	width: 150px;
-	height: 150px;
 	display: flex;
 	justify-content: center;
 	align-items: center;
 	flex-direction: column;
+	display: none;
 }
+
 
 .arrow {
 	position: absolute;
@@ -415,3 +414,43 @@ input {
 	color: #1D6154;
 	background-color: #fefef2;
    }
+
+.logoInsta img {
+    width: 20px; /* Pour SVG */
+    height: 20px;
+}
+
+.imageRectangle {
+	color: #CBD6DC;
+font-size: 100px;
+}
+
+.rectangle {
+	display: flex;
+	flex-direction: column;
+	background-color: #E8F1F6;
+}
+
+.rectangle > button {
+	font-family: work sans;
+	color: #1e4e72;
+	font-weight: 500;
+	font-size: medium;
+	padding: 20px;
+	padding-left: 40px;
+	padding-right: 40px;
+	margin-top: 10px;
+	background-color: #CBD6DC;
+	border: #CBD6DC;
+	z-index: 2;
+}
+
+.sousRectangle {
+	display: flex;
+	justify-content: center;
+	flex-direction: column;
+	background-color: #013450;
+	width: 40%;
+	height: 100%;
+	z-index: 10;
+}

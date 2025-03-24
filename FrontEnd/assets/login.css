@@ -237,9 +237,13 @@ margin: auto;
 	font-size: 1.2em;
 	border: none;
 	box-shadow: 0px 4px 14px rgba(0, 0, 0, 0.09);
+    width: 400px;
+    margin-left: 75px;
+    margin-top: 0;
 }
 #login label {
 	margin: 2em 0 1em 0;
+    margin-left: 75px;
 }
 #login textarea {
 	border: none;
@@ -272,12 +276,6 @@ a {
 	margin-top: 100px;
 }
 
-#mdpOublie {
-	display: flex;
-	justify-content: center;
-	
-}
-
 .boutons {
 	display: flex;
 	justify-content: center;
@@ -292,7 +290,7 @@ button {
 	border-radius: 25px;
 	justify-content: center;
 	align-items: center;
-	margin-left: 10px;
+	margin-left: 185px;
 	height: 40px;
 	color: #1D6154;
 	min-width: 100px;
@@ -303,7 +301,10 @@ button {
 	padding-right: 10px;
 	font-size: medium;
 	cursor: pointer;
+    margin-top: 20px;
+    width: 200px;
 }
+
 
 #portfolio {
 	display: flex;
@@ -454,12 +455,24 @@ footer {
 
 
 
+#mdpOublie {
+	display: flex;
+	justify-content: center;
+	margin: 100px;
+    width: 420px;
+    text-decoration: underline; 
+    margin-bottom: 200px;
+}
 
 
+.logoLogin {
+    font-weight: 650;
+}
 
-
-
-
+.logoInsta img {
+    width: 20px; /* Pour SVG */
+    height: 20px;
+}
 
 
 
