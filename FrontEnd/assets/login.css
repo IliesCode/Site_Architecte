@@ -32,7 +32,11 @@ footer, header, hgroup, menu, nav, section {
 body {
 	line-height: 1;
 	background-color: #fefef2;
-	height: 750px;
+	height: 700px;
+    width: 100%;
+	margin:auto;
+	font-family: 'Work Sans' ;
+	font-size: 14px;
 }
 ol, ul {
 	list-style: none;
@@ -50,12 +54,7 @@ table {
 	border-spacing: 0;
 }
 /** end reset css**/
-body {
-	max-width: 1140px;
-	margin:auto;
-	font-family: 'Work Sans' ;
-	font-size: 14px;
-}
+
 header {
 	display: flex;
 	justify-content: space-between;
@@ -230,6 +229,7 @@ margin: auto;
 	margin-top:30px;
 	display: flex;
 	flex-direction: column;
+    margin-left: 19%;
 }
 
 #login input {
@@ -437,13 +437,7 @@ button {
     margin-left: 12px;
 }
 
-body {
-    width: 1440px;
-}
 
-footer {
-    background-color: white;
-}
 
 .top {
     display: flex;
@@ -451,6 +445,8 @@ footer {
     align-items: center;
     margin-top: 59px;
     justify-content: space-between;
+    width: 60%;
+    margin-left: 22%;
 }
 
 
@@ -474,9 +470,20 @@ footer {
     height: 20px;
 }
 
+footer {
+    display: flex;
+    height: 60px;
+    background-color: #fffff5;
+    margin-top: 294px;
+    width: 100%;
+    justify-content: flex-end;
+    align-items: center;
+}
 
-
-
+.mentionsLegales {
+margin-right: 150px;
+font-family: work sans;
+}
 
 
 
