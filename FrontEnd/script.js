@@ -1,18 +1,20 @@
 import { verifierConnexion } from "./login.js";
-import {allProjects, afficherProjets, genererProjets, afficherModeEdition } from "./export.js"
+import {allProjects, afficherProjets, genererProjets, afficherModeEdition, form } from "./export.js"
 
 
 
 
 const btnValider = document.querySelector(".valider");
 const btnAjoutPhoto = document.querySelector(".ajoutPhoto");
+let photosAjoutees = true;
 
 
+// génère les projets 
 genererProjets();
 
 
 // fonction submit des nouveaux projets
-export async function gestionSubmit(event) {
+async function gestionSubmit(event) {
     event.preventDefault();
     const token = localStorage.getItem("token");
 
@@ -52,8 +54,7 @@ function attachEventListener() {
 
 
 
-// Ajout du menu déroulant des catégories 
-
+// ajoute le menu déroulant des catégories 
 async function genererMenuCategories() {
     
     // Récupération des catégories depuis l'API
@@ -109,7 +110,7 @@ async function genererMenuCategories() {
 
 
 
-// Verifie si les 3 champs sont remplis 
+// verifie si les 3 champs sont remplis 
 function verifierChamps() {
 
     const inputFile2 = document.querySelector("input[type='file']");
@@ -121,7 +122,6 @@ function verifierChamps() {
 
 
     if (inputFile2.files.length > 0 && titreForm2.value.trim() !== "" && selectCategorie.value !== "") {
-        console.log("2258");
         btnValider.removeAttribute("disabled"); // Active le bouton
         btnValider.style.backgroundColor = "#1D6154"; // Optionnel : changer la couleur
     }else{
@@ -133,7 +133,7 @@ function verifierChamps() {
 
 
 
-// Fonction asynchrone pour générer les boutons des catégories
+// génère les boutons des catégories
 async function genererBoutonsCategories() {
     const token = localStorage.getItem("token");
 
@@ -237,72 +237,15 @@ Object.entries(categoriesUniques).forEach(([id, name]) => {
 genererBoutonsCategories();
 
 
-// // Exécute la fonction après le chargement du DOM
+// exécute la fonction après le chargement du DOM
 document.addEventListener("DOMContentLoaded", function () {
     verifierConnexion();
     afficherModeEdition();
 });
 
 
-//----------- FORMULAIRE ------------
-
-
-// contact 
-const contact = document.querySelector("#contact");
-
-const contactText = document.createElement("h2");
-contactText.innerHTML = "Contact";
-contact.appendChild(contactText);
-const textProjet = document.createElement("p");
-textProjet.innerHTML = "Vous avez un projet ? Discutons-en !";
-contact.appendChild(textProjet);
-
-
-// Création du form
-const form = document.createElement("form");
-form.setAttribute("id", "form");
-form.setAttribute("action", "#form");
-form.setAttribute("method", "post");
-contact.appendChild(form); // Ajoute le formulaire dans la section après le texte
-
-// Nom 
-const labelNom = document.createElement("label")
-labelNom.innerHTML = "Nom";
-form.appendChild(labelNom);
-
-const nomForm = document.createElement("input");
-nomForm.type = "text"; // Définit le type d'input
-nomForm.name = "nom"; // Donne un nom à l'input
-form.appendChild(nomForm);
-
-
-// Email
-const labelEmail = document.createElement("label")
-labelEmail.innerHTML = "Email";
-form.appendChild(labelEmail);
-
-const emailForm = document.createElement("input");
-emailForm.type = "text"; // Définit le type d'input
-emailForm.name = "Email"; // Donne un nom à l'input
-form.appendChild(emailForm);
-
-
-// Message
-const labelMessage = document.createElement("label")
-labelMessage.innerHTML = "Message";
-form.appendChild(labelMessage);
-
-const messageForm = document.createElement("textarea");
-messageForm.name = "Message"; // Donne un nom à l'input
-messageForm.classList.add("message")
-form.appendChild(messageForm);
-
-
-// Bouton 
-const btnEnvoyer = document.createElement("input")
-btnEnvoyer.type = "submit";
-btnEnvoyer.innerHTML = "envoyer";
-form.appendChild(btnEnvoyer);
+// affiche le formulaire 
+form();
 
 
 
@@ -311,18 +254,19 @@ form.appendChild(btnEnvoyer);
 
 // GESTION DE LA MODALE -----------------------------------------------
 
-// Ouverture et fermeture de la modale
+// ouverture et fermeture de la modale
 const modal = document.querySelector(".modalContent");
 const overlay = document.querySelector(".overlay");
 const openModal = document.querySelector(".modifierProjets");
 const closeModal = document.querySelector(".close");
 
+// affiche la premiere page de la modale
 function reset() {
     photosAjoutees = true;
 };
 
 
-// Ouverture modale
+// ouvre la modale
 openModal.addEventListener("click", function  () {
     reset();
     modal.style.display = "flex";
@@ -330,7 +274,7 @@ openModal.addEventListener("click", function  () {
 })
 
 
-// Fermeture modale
+// ferme la modale
 closeModal.addEventListener("click", function  () {
     modal.style.display = "none"
     overlay.style.display = "none";
@@ -344,13 +288,12 @@ overlay.addEventListener("click", function  () {
 })
 
 
-// Ouverture de la modale et affichage des projets
+// ouvre la modale et affiche les projets
 openModal.addEventListener("click", afficherProjetsModale);
 
 
 
- //FONCTION POUR AFFICHER LES PROJETS DANS LA MODALE
-
+// affiche les projets dans la modale
  function projetModale(projets,galerieModale) {
 
     projets.forEach(projet => {
@@ -401,16 +344,7 @@ openModal.addEventListener("click", afficherProjetsModale);
 
 
 
-
-
-
-// FONCTION AJOUT PHOTO
-
-
-let photosAjoutees = true;
-
-
-// Ajout de l'événement au chargement de la page
+// affiche la partie pour ajouter un projet dans la modale
 document.addEventListener("DOMContentLoaded", () => {
     const ajouterPhoto = document.querySelector(".ajoutPhoto");
     ajouterPhoto.addEventListener("click", function () {
@@ -420,17 +354,19 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 });
 
+
+
+
 async function afficherProjetsModale() {
     const galerieModale = document.querySelector(".galleryModale");
 
     if (photosAjoutees === false) { 
-        // Affichage de l'interface d'ajout de photo
-        
+
+        // affiche l'interface d'ajout de photo
         galerieModale.innerHTML = ""; // Nettoyage avant d'ajouter le contenu
 
         const flecheRetour = document.createElement("i");
         flecheRetour.classList.add("fa-solid", "fa-arrow-left", "arrow");
-
 
         const txtAjoutPhoto = document.createElement("h2");
         txtAjoutPhoto.innerText = "Ajout Photo";
@@ -442,88 +378,78 @@ async function afficherProjetsModale() {
         sousRectangle.classList.add("sousRectangle");
         sousRectangle.style.display = "none";
 
-        // Créer l'élément image
         const imageRectangle = document.createElement("i");
         imageRectangle.classList.add("fa-regular", "fa-image", "imageRectangle");
 
 
         
-// Ajouter l'image à la div
-
+        // cjoute l'image
         const btnUpload = document.createElement("button");
         btnUpload.innerHTML = " + Ajouter Photo";
 
-        // Clique sur l'input lors du clique sur le btn
+        // relie le clique sur l'input au clique sur le btn
         btnUpload.addEventListener("click", function () {
             inputFile.click();
         });
 
-        const lecteur = new FileReader();
+        const lecteur = new FileReader(); //  lis le contenu d'un fichier local en JavaScript
         btnUpload.addEventListener("change", function (event) {
             btnUpload.style.display = "none";
-            imageRectangle.style.display = "none";
+            imageRectangle.style.display = "none"; // cache l'élément de sélection de fichier et le btn
             
             const fichier = event.target.files[0];
             if (fichier) {
                 lecteur.readAsDataURL(fichier); // Convertit le fichier en URL base64
             }
-            lecteur.addEventListener("load", (event) => {
+            lecteur.addEventListener("load", (event) => { // affiche l'image selectionnée 
                 console.log("Fichier chargé, URL Base64 :", event.target.result);
                 sousRectangle.src = event.target.result;
                 sousRectangle.style.display = "block";
             });
             
-    });
+        });
     
+        // créé le form pour ajouter un nouveau projet 
+        function formNewProjet() {
+                const formFile = document.createElement("form")
+            formFile.action = "/upload";
+            formFile.method = "POST";
 
-        const formFile = document.createElement("form")
-        formFile.action = "/upload";
-        formFile.method = "POST";
+            const inputFile = document.createElement("input");
+            inputFile.type = "file";
+            inputFile.name = "avatar";
+            inputFile.enctype = "multipart/form-data";
+            inputFile.classList.add("imgFile");
 
-        const inputFile = document.createElement("input");
-        inputFile.type = "file";
-        inputFile.name = "avatar";
-        inputFile.enctype = "multipart/form-data";
-        inputFile.classList.add("imgFile");
-       
+            const ajoutTitre = document.createElement("h3");
+            ajoutTitre.innerHTML = "Titre";
+            ajoutTitre.classList.add("ajoutTitre");
 
-        // Ajout de la catégorie titre
+            const titreForm = document.createElement("input");
+            titreForm.type = "text"; // Définit le type d'input
+            titreForm.name = "titre"; // Donne un nom à l'input
+            
 
-        const ajoutTitre = document.createElement("h3");
-        ajoutTitre.innerHTML = "Titre";
-        ajoutTitre.classList.add("ajoutTitre");
+            btnUpload.appendChild(inputFile);
+            ajouterPhotoRectanlge.appendChild(imageRectangle);
+            ajouterPhotoRectanlge.appendChild(btnUpload);
+            ajouterPhotoRectanlge.appendChild(sousRectangle)
+            galerieModale.appendChild(txtAjoutPhoto);
+            galerieModale.appendChild(ajouterPhotoRectanlge);
+            galerieModale.appendChild(ajoutTitre);
+            galerieModale.appendChild(titreForm);
+            galerieModale.appendChild(flecheRetour);
+        }
 
-        const titreForm = document.createElement("input");
-        titreForm.type = "text"; // Définit le type d'input
-        titreForm.name = "titre"; // Donne un nom à l'input
-        
-        
-
-
-        // Appeler la fonction pour afficher le menu au chargement de la page
-        genererMenuCategories();
-        
-        
-        
-
-        btnUpload.appendChild(inputFile);
-        ajouterPhotoRectanlge.appendChild(imageRectangle);
-        ajouterPhotoRectanlge.appendChild(btnUpload);
-        ajouterPhotoRectanlge.appendChild(sousRectangle)
-        galerieModale.appendChild(txtAjoutPhoto);
-        galerieModale.appendChild(ajouterPhotoRectanlge);
-        galerieModale.appendChild(ajoutTitre);
-        galerieModale.appendChild(titreForm);
-        galerieModale.appendChild(flecheRetour);
-
+        formNewProjet();
 
 
         // action du btn valider
-
         verifierChamps();
-
+        // retire et ajoute de nouveau l'event listener pour pallier au probleme de doublon
         attachEventListener();
-        
+        // Appeler la fonction pour afficher le menu au chargement de la page
+        genererMenuCategories();
 
 
 
@@ -538,26 +464,26 @@ async function afficherProjetsModale() {
 
             let isRequestSent = false;
 
-            btnAjoutPhoto.addEventListener("click", function () {
-                if (isRequestSent) return; // Bloque si déjà envoyé
+            btnAjoutPhoto.addEventListener("click", function () { //empêche de cliquer plusieurs fois sur btnAjoutPhoto pour éviter d'envoyer plusieurs requêtes
+                if (isRequestSent) return; // bloque si déjà envoyé
                 isRequestSent = true;
         
             });
             
 
-            const clrBtn = document.querySelector(".ajoutPhoto");
+            const clrBtn = document.querySelector(".ajoutPhoto"); 
             clrBtn.style.backgroundColor = "#1D6154";
 
             
-            projetModale(projets, galerieModale);
+            projetModale(projets, galerieModale); // recharge les projets après l'ajout éventuel de nouveaux
             photosAjoutees = true;
             
             btnValider.style.display = "none";
             btnAjoutPhoto.style.display = "block";
         })
 
+        // transforme le bouton ajout photos en bouton valider  
         btnValider.style.backgroundColor = "#1D6154";
-
         btnAjoutPhoto.style.display = "none";
         btnValider.style.display = "block";
 

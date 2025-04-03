@@ -108,3 +108,64 @@ export function afficherModeEdition() {
     }
 }
 
+
+export function form() {
+    // contact 
+    const contact = document.querySelector("#contact");
+    
+    const contactText = document.createElement("h2");
+    contactText.innerHTML = "Contact";
+    contact.appendChild(contactText);
+    const textProjet = document.createElement("p");
+    textProjet.innerHTML = "Vous avez un projet ? Discutons-en !";
+    contact.appendChild(textProjet);
+    
+    
+    // Création du form
+    const form = document.createElement("form");
+    form.setAttribute("id", "form");
+    form.setAttribute("action", "#form");
+    form.setAttribute("method", "post");
+    contact.appendChild(form); // Ajoute le formulaire dans la section après le texte
+    
+    // Nom 
+    const labelNom = document.createElement("label")
+    labelNom.innerHTML = "Nom";
+    form.appendChild(labelNom);
+    
+    const nomForm = document.createElement("input");
+    nomForm.type = "text"; // Définit le type d'input
+    nomForm.name = "nom"; // Donne un nom à l'input
+    form.appendChild(nomForm);
+    
+    
+    // Email
+    const labelEmail = document.createElement("label")
+    labelEmail.innerHTML = "Email";
+    form.appendChild(labelEmail);
+    
+    const emailForm = document.createElement("input");
+    emailForm.type = "text"; // Définit le type d'input
+    emailForm.name = "Email"; // Donne un nom à l'input
+    form.appendChild(emailForm);
+    
+    
+    // Message
+    const labelMessage = document.createElement("label")
+    labelMessage.innerHTML = "Message";
+    form.appendChild(labelMessage);
+    
+    const messageForm = document.createElement("textarea");
+    messageForm.name = "Message"; // Donne un nom à l'input
+    messageForm.classList.add("message")
+    form.appendChild(messageForm);
+    
+    
+    // Bouton 
+    const btnEnvoyer = document.createElement("input")
+    btnEnvoyer.type = "submit";
+    btnEnvoyer.innerHTML = "envoyer";
+    form.appendChild(btnEnvoyer);
+    
+    }
+
